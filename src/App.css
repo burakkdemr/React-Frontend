@@ -22,7 +22,12 @@
 .App-link {
   color: #61dafb;
 }
-
+.deneme {
+  color: red
+}
+.deneme:hover{
+  color:blue
+}
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);
