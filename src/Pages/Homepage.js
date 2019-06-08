@@ -1,24 +1,23 @@
-import React, { Component } from 'react'
-import Header from '../components/Header';
-import { Container, Row, Col } from 'reactstrap';
-import Deneme from '../components/Deneme';
+import React, { Component } from "react";
+import Header from "../components/Header";
+import { Container, Row, Col } from "reactstrap";
+import Deneme from "../components/Deneme";
 export default class Homepage extends Component {
-    render() {
-        return (
-            <Container>
+  render() {
+    return (
+      <Container>
         <Row>
           <Col>
-              <Header />
+            <Header />
           </Col>
         </Row>
-       
+
         <Row>
-          <Col xs="12">
-             <Deneme/>
-        </Col>
+          <Col className="Container">
+            <Deneme />
+          </Col>
         </Row>
-       
       </Container>
-        )
-    }
+    );
+  }
 }

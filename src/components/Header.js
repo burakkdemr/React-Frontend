@@ -1,9 +1,8 @@
 import React, { Component } from "react";
-import '../index';
+import "../index";
 import PropTypes from "prop-types";
-import Left from './left.svg';
-import { Link } from 'react-router-dom';
-
+import Left from "./left.svg";
+import { Link } from "react-router-dom";
 import {
   Collapse,
   Navbar,
@@ -11,6 +10,7 @@ import {
   NavbarBrand,
   Nav,
   NavItem,
+  Container
 } from "reactstrap";
 
 class HomePage extends Component {
@@ -21,7 +21,6 @@ class HomePage extends Component {
     this.state = {
       isOpen: false
     };
-    
   }
   toggle() {
     this.setState({
@@ -30,41 +29,59 @@ class HomePage extends Component {
   }
   render() {
     return (
-      <div className="header">
-        <Navbar color="white" light expand="md">
-           
-          <NavbarBrand href="/" className="navImg"><img src={Left} alt="AVCI"></img></NavbarBrand>
+      <Container className="container">
+        <Navbar
+          color="white"
+          light
+          expand="md"
+          className="shadow-md border-grey border-bottom"
+          style={{ width: "1156 px", height: "50 px" }}
+        >
+          <NavbarBrand href="/" className="navImg">
+            <img src={Left} alt="AVCI" style={{cursor:"default"}}/>
+          </NavbarBrand>
           <NavbarToggler onClick={this.toggle} />
           <Collapse isOpen={this.state.isOpen} navbar>
-
             <Nav className="ml-auto" navbar>
-              <NavItem className="mr-2">
+              <NavItem className="ml-3">
                 <Link
                   to="/"
                   style={{
-                    fontWeight: "bold",color:"#1A3C7E"}}>Anasayfa</Link>
+                    fontWeight: "bold",
+                    color: "#1A3C7E"
+                  }}
+                >
+                  Anasayfa
+                </Link>
               </NavItem>
 
-              <NavItem className="mr-2">
+              <NavItem className="ml-3">
                 <Link
                   to="/universities"
                   style={{
-                    fontWeight: "bold", color:"#1A3C7E"}} >Üniversiteler</Link>
+                    fontWeight: "bold",
+                    color: "#1A3C7E"
+                  }}
+                >
+                  Üniversiteler
+                </Link>
               </NavItem>
-           
-              <NavItem className="mr-5" >
+
+              <NavItem className="ml-3">
                 <Link
                   to="/students"
                   style={{
-                    fontWeight: "bold",color:"#1A3C7E"}}>Öğrenciler
-              </Link>
+                    fontWeight: "bold",
+                    color: "#1A3C7E"
+                  }}
+                >
+                  Öğrenciler
+                </Link>
               </NavItem>
-              
-            
             </Nav>
           </Collapse>
         </Navbar>
-      </div>
+      </Container>
     );
   }
 }
