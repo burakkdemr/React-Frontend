@@ -38,7 +38,7 @@ class HomePage extends Component {
           style={{ width: "1156 px", height: "50 px" }}
         >
           <NavbarBrand href="/" className="navImg">
-            <img src={Left} alt="AVCI" style={{cursor:"default"}}/>
+            <img src={Left} alt="AVCI" style={{ cursor: "default" }} />
           </NavbarBrand>
           <NavbarToggler onClick={this.toggle} />
           <Collapse isOpen={this.state.isOpen} navbar>

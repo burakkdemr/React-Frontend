@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import Header from "../components/Header";
-
 import {
   Container,
   Col,
@@ -17,35 +16,45 @@ import {
   ModalFooter
 } from "reactstrap";
 import axios from "axios";
-import DatePicker from "react-datepicker"
+import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+
 export default class UniversityDetails extends Component {
   constructor(props) {
     super(props);
     this.state = {
       modal: false,
+      modal1: false,
       students: [],
-      name:'',
-      university:'',
+      name: "",
+      university: "",
       date: new Date(),
-      selectlist:[],
+      selectlist: [],
       uni_founded_date: "",
       uni_types: "",
-      uni_web_page:'',
-      uni_city:'',
-      uni_name:''
+      uni_web_page: "",
+      uni_city: "",
+      uni_name: "",
+      student_id: "",
+      student_name: "",
+      student_start_date: ""
     };
     this.toggle = this.toggle.bind(this);
+    this.toggle1 = this.toggle1.bind(this);
     this.handleChangeDate = this.handleChangeDate.bind(this);
+    this.studentsDetail = this.studentsDetail.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmitStudent = this.handleSubmitStudent.bind(this);
   }
   componentDidMount() {
-    const { match: { params } } = this.props;
+    const {
+      match: { params }
+    } = this.props;
 
     axios
       .get(
-        "https://virtserver.swaggerhub.com/MuhammetDilmac/Intern/1.0.0/universities/"+params.universityId
+        "https://virtserver.swaggerhub.com/MuhammetDilmac/Intern/1.0.0/universities/" +
+          params.universityId
       )
       .then(response => {
         let web_page = response.data.web_page;
@@ -55,27 +64,24 @@ export default class UniversityDetails extends Component {
         let name = response.data.name;
         let uni = response.data;
         let studentlist = response.data.students;
-        this.setState({ students: studentlist})
-        this.setState({ universities: uni})
+        this.setState({ students: studentlist });
+        this.setState({ universities: uni });
         this.setState({ uni_types: type });
         this.setState({ uni_founded_date: founded_at });
-        this.setState({ uni_web_page: web_page }); 
-        this.setState({ uni_city: city }); 
-        this.setState({ uni_name: name }); 
+        this.setState({ uni_web_page: web_page });
+        this.setState({ uni_city: city });
+        this.setState({ uni_name: name });
       });
-      axios
+    axios
       .get(
         "https://virtserver.swaggerhub.com/MuhammetDilmac/Intern/1.0.0/universities/"
       )
       .then(response => {
-       
         let unilist = response.data;
-      
-        this.setState({ selectlist: unilist})
-        
+        this.setState({ selectlist: unilist });
       });
   }
-  
+
   handleChange(e) {
     this.setState({ [e.target.name]: e.target.value });
   }
@@ -89,37 +95,48 @@ export default class UniversityDetails extends Component {
       modal: !prevState.modal
     }));
   }
-  handleSubmitStudent (event){
+  toggle1() {
+    this.setState(prevState => ({
+      modal1: !prevState.modal1
+    }));
+  }
+  handleSubmitStudent(event) {
     event.preventDefault();
-  
+
     var date = this.state.date;
-  
+    let dd = date.getDate(); //day of month
 
- let dd = date.getDate();//day of month
+    let mm = date.getMonth() + 1; // month
+    let yyyy = date.getFullYear(); //day of week
+    if (dd < 10) {
+      //if less then 10 add a leading zero
+      dd = "0" + dd;
+    }
+    if (mm < 10) {
+      mm = "0" + mm; //if less then 10 add a leading zero
+    }
 
- let mm = date.getMonth()+1;// month
- let yyyy = date.getFullYear();//day of week
- if (dd < 10) {//if less then 10 add a leading zero
-     dd = "0" + dd;
-   }
- if (mm < 10) {
-    mm = "0" + mm;//if less then 10 add a leading zero
-  }
+    console.log("name : " + this.state.name);
+    console.log("university : " + this.state.university);
+    console.log("started_at : " + yyyy + "-" + mm + "-" + dd);
+    let studentParameters = {
+      name: this.state.name,
+      id: this.state.student_id,
+      university: this.state.university,
+      started_at: yyyy + "-" + mm + "-" + dd
+    };
 
-  console.log("name : " + this.state.name)
-  console.log("university : " + this.state.university)
-  console.log("started_at : " +  yyyy+ "-"+ mm+ "-" + dd)
-  let studentParameters = {
-    name: this.state.name,
-    university: this.state.university,
-    started_at:  yyyy+ "-"+ mm+ "-" + dd
-  }
-    axios.post('https://virtserver.swaggerhub.com/MuhammetDilmac/Intern/1.0.0/students', studentParameters)
-    .then(response => {
-      console.log(response);
-    })
+    axios
+      .post(
+        "https://virtserver.swaggerhub.com/MuhammetDilmac/Intern/1.0.0/students",
+        studentParameters
+      )
+      .then(response => {
+        console.log(response);
+      });
     // api 'ye istek yolladığımda 200 dönüyor fakat listeye eklenmiyor, api kaynaklı olabilir.
   }
+
   state = {
     universities: [
       {
@@ -1564,9 +1581,27 @@ export default class UniversityDetails extends Component {
       }
     ]
   };
+
+  studentsDetail = student_id => {
+    this.toggle1();
+    axios
+      .get(
+        "https://virtserver.swaggerhub.com/MuhammetDilmac/Intern/1.0.0/students/" +
+          student_id
+      )
+      .then(response => {
+        const name = response.data.name;
+        const id = response.data.id;
+        const started_at = response.data.started_at;
+        this.setState({ student_name: name });
+        this.setState({ student_start_date: started_at });
+        this.setState({ student_id: id });
+      });
+  };
   render() {
-   
-    const { match: { params } } = this.props;
+    const {
+      match: { params }
+    } = this.props;
     return (
       <Container>
         <Row>
@@ -1578,13 +1613,26 @@ export default class UniversityDetails extends Component {
         {/**Uni Name and Uni City */}
         <Row className="mt-5">
           <Col>
-          
-            {this.state.uni_name} {this.state.uni_city}
+            <p
+              style={{
+                color: "#3E3F42",
+                fontFamily: "Roboto,Medium",
+                cursor: "default"
+              }}
+            >
+              <strong style={{ fontSize: "18px", fontFamily: "Roboto,Medium" }}>
+                {this.state.uni_name}
+              </strong>{" "}
+              {this.state.uni_city}
+            </p>
           </Col>
 
           {/**Öğrenci Ekle Button */}
           <Col>
-            <Button style={{backgroundColor:"#1A3C7E",marginLeft:"400px"}} onClick={this.toggle}>
+            <Button
+              style={{ backgroundColor: "#1A3C7E", marginLeft: "400px" }}
+              onClick={this.toggle}
+            >
               Öğrenci Ekle
             </Button>
             <Modal
@@ -1595,8 +1643,7 @@ export default class UniversityDetails extends Component {
             >
               <ModalHeader toggle={this.toggle}>Öğrenci Ekle</ModalHeader>
               <Form onSubmit={this.handleSubmitStudent}>
-              <ModalBody>
-               
+                <ModalBody>
                   <FormGroup>
                     <Label for="name">ÖĞRENCİ ADI</Label>
                     <Input
@@ -1609,75 +1656,163 @@ export default class UniversityDetails extends Component {
                   </FormGroup>
                   <FormGroup>
                     <Label for="university">ÜNİVERSİTE</Label>
-                   
-                    <Input type="select" name="university" onChange={this.handleChange}  placeholder="Üniversite Seçiniz" required>
-                       <option value={0}>Üniversite Seçiniz</option>
-                      { this.state.selectlist.map(university => {
-                        return <option key={university.id} value={university.id}>{university.name}</option>
-                      } )
-                    
-                    }
-                    {/* apide tek üni bulunduğu için tek üni listeleniyor */}
-                     
-                      
+
+                    <Input
+                      type="select"
+                      name="university"
+                      onChange={this.handleChange}
+                      placeholder="Üniversite Seçiniz"
+                      required
+                    >
+                      <option value={0}>Üniversite Seçiniz</option>
+                      {this.state.selectlist.map(university => {
+                        return (
+                          <option key={university.id} value={university.id}>
+                            {university.name}
+                          </option>
+                        );
+                      })}
+                      {/* apide tek üni bulunduğu için tek üni listeleniyor */}
                     </Input>
                   </FormGroup>
                   <FormGroup>
                     <Label for="startdate">BAŞLAMA TARİHİ</Label>
-                  
+                    <br />
                     <DatePicker
                       dateFormat="yyyy/MM/dd"
                       selected={this.state.date}
-                      onChange={this.handleChangeDate} />
-
+                      onChange={this.handleChangeDate}
+                      required
+                    />
                   </FormGroup>
-              
-             
-             
-              </ModalBody>
-              <ModalFooter>
-                <Row>
-                  <Col className="sm-6" style={{ backgroundColor: "#D8DCE6" }}>
-                    <Button color="#FBFBFC" onClick={this.toggle}>
-                      İptal Et
-                    </Button>{" "}
-                  </Col>
-                  <Col className="sm-6">
-                    <Button
-                   
-                      style={{ backgroundColor: "#4D7CFE" }}
-                      type="submit"
+                </ModalBody>
+                <ModalFooter>
+                  <Row>
+                    <Col
+                      className="sm-6"
+                      style={{ backgroundColor: "white", marginRight: "260px" }}
                     >
-                      Oluştur
-                    </Button>
-                  </Col>
-                </Row>
-              </ModalFooter>
+                      <Button color="#3E3F42" onClick={this.toggle}>
+                        İptal Et
+                      </Button>{" "}
+                    </Col>
+                    <Col className="sm-6">
+                      <Button
+                        style={{ backgroundColor: "#4D7CFE" }}
+                        type="submit"
+                      >
+                        Oluştur
+                      </Button>
+                    </Col>
+                  </Row>
+                </ModalFooter>
               </Form>
             </Modal>
           </Col>
         </Row>
 
         {/**Uni Details */}
-        <Row className="md-8 mt-3" style={{cursor:"default"}}>
+        <Row className="md-4 mt-3 " style={{ cursor: "default" }}>
           <Col className="md-2">
-            <p>ID: {params.universityId}</p>
+            <p style={{ fontSize: "12px", color: "#3E3F42" }}>
+              ID
+              <br />
+              <strong> {params.universityId}</strong>
+            </p>
           </Col>
           <Col className="md-2">
-            <p>Kuruluş Tarihi: {this.state.uni_founded_date}</p>
+            <p
+              style={{
+                fontSize: "12px",
+                color: "#3E3F42",
+                marginLeft: "-180px"
+              }}
+            >
+              Kuruluş Tarihi
+              <br />
+              <strong> {this.state.uni_founded_date}</strong>
+            </p>
           </Col>
           <Col className="md-2">
-            <p>Türü: {this.state.uni_types}</p>
+            <p
+              style={{
+                fontSize: "12px",
+                color: "#3E3F42",
+                marginLeft: "-300px"
+              }}
+            >
+              Türü
+              <br />
+              <strong>{this.state.uni_types}</strong>
+            </p>
           </Col>
           <Col className="md-2">
-            <p> 
-              Web Sitesi: {" "}
-              <a href={ this.state.uni_web_page} rel="noopener noreferrer" target="_blank" color="link">
-                Ziyaret Et
+            <p
+              style={{
+                fontSize: "12px",
+                color: "#3E3F42",
+                marginLeft: "-450px"
+              }}
+            >
+              Web Sitesi
+              <br />{" "}
+              <a
+                href={this.state.uni_web_page}
+                rel="noopener noreferrer"
+                target="_blank"
+                color="link"
+              >
+                <strong>Ziyaret Et →</strong>
               </a>
             </p>
           </Col>
         </Row>
+
+        {/**Student Modal */}
+
+        <Modal
+          isOpen={this.state.modal1}
+          toggle={this.toggle1}
+          className={this.props.className1}
+          style={{ height: 264, fontWeight: 393.22 }}
+          centered
+        >
+          <ModalHeader
+            style={{
+              fontFamily: "Roboto,Medium",
+              fontSize: "20px",
+              color: "#3E3F42"
+            }}
+            toggle={this.toggle1}
+          >
+            {" "}
+            {this.state.student_name}{" "}
+          </ModalHeader>
+          <ModalBody>
+            {
+              <p
+                className="mt-2"
+                style={{
+                  fontFamily: "Roboto,Medium",
+                  fontSize: "14px",
+                  color: "#31394D",
+                  textAlign: "left"
+                }}
+              >
+                ID:<strong>{this.state.student_id}</strong>
+                <br />
+                Üniversite Adı:<strong>{this.state.uni_name}</strong>
+                <br />
+                Başlangıç Tarihi:
+                <strong>{this.state.student_start_date}</strong>
+                <br />
+                Kuruluş Tarihi:<strong>{this.state.uni_founded_date}</strong>
+                <br />
+                Türü:<strong>{this.state.uni_types}</strong>
+              </p>
+            }
+          </ModalBody>
+        </Modal>
 
         {/**Student Details in this page */}
         <Row className="mt-2">
@@ -1693,6 +1828,7 @@ export default class UniversityDetails extends Component {
               {this.state.students.map(student => (
                 <tr
                   style={{ cursor: "pointer" }}
+                  onClick={() => this.studentsDetail(student.id)}
                   key={student.id}
                 >
                   <th scope="row">{student.id}</th>

@@ -23,10 +23,10 @@
   color: #61dafb;
 }
 .deneme {
-  color: red
+  color: red;
 }
-.deneme:hover{
-  color:blue
+.deneme:hover {
+  color: blue;
 }
 @keyframes App-logo-spin {
   from {

@@ -6,7 +6,7 @@ import axios from "axios";
 export default class Universities extends Component {
   state = {
     tiklandi: true,
-    
+
     universities: [
       {
         id: 0,
@@ -1452,10 +1452,8 @@ export default class Universities extends Component {
   };
 
   componentDidMount() {
-     //this.getUniversities();
-     //api universities endpoint'inde tek bir üniversite yer aldığı için ve docker çalıştıramadığım için üniversite listesini manuel ekledim.
-     
-
+    //this.getUniversities();
+    //api universities endpoint'inde tek bir üniversite yer aldığı için ve docker çalıştıramadığım için üniversite listesini manuel ekledim.
   }
 
   getUniversities = () => {
@@ -1464,15 +1462,12 @@ export default class Universities extends Component {
         "https://virtserver.swaggerhub.com/MuhammetDilmac/Intern/1.0.0/universities"
       )
       .then(response => {
-        
         const universitelistesi = response.data;
         this.setState({ universities: universitelistesi });
-        
-      })
-      
+      });
   };
 
-  uniDetails = (uni_id) => {
+  uniDetails = uni_id => {
     this.toggle();
     axios
       .get(
@@ -1492,8 +1487,8 @@ export default class Universities extends Component {
         this.setState({ uni_founded_at: uni_founded_at });
         this.setState({ uni_web_page: uni_web_page });
         this.setState({ uni_type: uni_type });
-      })
-  }
+      });
+  };
   render() {
     return (
       <Container className="uni-page">
@@ -1503,61 +1498,51 @@ export default class Universities extends Component {
           </Col>
         </Row>
         <Container>
-        <Row>
-          <Col md="12" className="mt-5">
-            <p
-              style={{
-                fontFamily: "Roboto,Regular",
-                fontSize: "20px",
-                color: "#000000",
-                cursor:"default"
-              }}
-            >
-              <strong>Üniversite Listesi</strong>
-            </p>
-          </Col>
-        </Row>
-
-        <br />
-
-        <Row>
-          <Table className="table table-hover">
-            <thead>
-              <tr
-                style={{cursor:"default"}}
+          <Row>
+            <Col md="12" className="mt-5">
+              <p
+                style={{
+                  fontFamily: "Roboto,Regular",
+                  fontSize: "20px",
+                  color: "#000000",
+                  cursor: "default"
+                }}
               >
-                <th>ID</th>
-                <th>ÜNİVERSİTE ADI</th>
-                <th>DETAY</th>
-              </tr>
-            </thead>
+                <strong>Üniversite Listesi</strong>
+              </p>
+            </Col>
+          </Row>
 
-            <tbody>
-              {this.state.universities.map(university => (
-                <tr
-                  style={{ cursor: "pointer" }}
-                  key={university.id}
-                  
-                >
-                  <th scope="row">{university.id}</th>
-                  <td>{university.name}</td>
+          <br />
 
-                  <td>
-                    <Link to={`/universitydetails/${university.id}`}>
-                      <Button
-                        className="btn"
-                        color="link"
-                      
-                      >
-                        tıklayın..
-                      </Button>
-                    </Link>
-                  </td>
+          <Row>
+            <Table className="table table-hover">
+              <thead>
+                <tr style={{ cursor: "default" }}>
+                  <th>ID</th>
+                  <th>ÜNİVERSİTE ADI</th>
+                  <th>DETAY</th>
                 </tr>
-              ))}
-            </tbody>
-          </Table>
-        </Row>
+              </thead>
+
+              <tbody>
+                {this.state.universities.map(university => (
+                  <tr style={{ cursor: "pointer" }} key={university.id}>
+                    <th scope="row">{university.id}</th>
+                    <td>{university.name}</td>
+
+                    <td>
+                      <Link to={`/universitydetails/${university.id}`}>
+                        <Button className="btn" color="link">
+                          tıklayın..
+                        </Button>
+                      </Link>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </Table>
+          </Row>
         </Container>
       </Container>
     );
